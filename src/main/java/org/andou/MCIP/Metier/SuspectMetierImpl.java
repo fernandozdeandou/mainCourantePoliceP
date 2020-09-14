@@ -1,5 +1,10 @@
 package org.andou.MCIP.Metier;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +25,10 @@ public class SuspectMetierImpl implements SuspectMetier {
 
 	@Override
 	public Suspect saveSuspect(Suspect suspect) {
+		if (suspectRepository.existsByNumeroCni(suspect.getNumeroCni()))
+		{ throw new
+			  RuntimeException("Le suspect ayant la CNI N°"+suspect.getNumeroCni()+" est déjà enrégistré s'il vous plait!");
+		 }
 		suspect.setPhotoEntiere("photoEntiere.png");
 		suspect.setPhotoFace("photoFace.jpg");
 		suspect.setPhotoProfil("photoProfil.png");
@@ -50,6 +59,10 @@ public class SuspectMetierImpl implements SuspectMetier {
 	}
 	@Override
 	public Suspect infosSuspectParNumeroCni(String cni) {
+		if (!suspectRepository.existsByNumeroCni(cni))
+		{ throw new
+			  RuntimeException("le suspect ayant la CNI N°"+cni+" n'est pas encore enrégistré !");
+		 }
 		return suspectRepository.findByNumeroCni(cni);
 	}
 
@@ -90,10 +103,15 @@ public class SuspectMetierImpl implements SuspectMetier {
 
 	@Override
 	public String defererLeSuspect(Long idSuspect) {
-		Suspect susp =suspectRepository.findById(idSuspect).get();
+		Suspect susp =  suspectRepository.findById(idSuspect).get();
 		susp.setPosition("DEFERER");
 		suspectRepository.save(susp);
-		return "ok";
+		return "Suspect déféré avec succès";
+	}
+	@Override
+	public List<Suspect> suspectLibre() {
+		// TODO Auto-generated method stub
+		return suspectRepository.suspectLibre();
 	}
 
 	@Override
@@ -104,14 +122,67 @@ public class SuspectMetierImpl implements SuspectMetier {
 
 	@Override
 	public Suspect ajouterEvenement(Long idSuspect, Long idEvenement) {
-	Evenement event = evenementRepository.findById(idEvenement).get();
-	Suspect susp = suspectRepository.findById(idSuspect).get();
-	List<Evenement> liEv = new ArrayList<Evenement>();
-	liEv.addAll(susp.getEvenements());
-	liEv.add(event);
-	susp.setEvenements(liEv);
-	suspectRepository.save(susp);
+		if (!evenementRepository.existsById(idEvenement))
+		{ throw new
+			  RuntimeException("L'évènement N°"+idEvenement+" n'est pas encore enrégistré !");
+		 }
+		
+		
+		Evenement event = evenementRepository.findById(idEvenement).get();
+		Suspect susp = suspectRepository.findById(idSuspect).get();
+		List<Evenement> liEv = new ArrayList<Evenement>();
+		liEv.addAll(susp.getEvenements());
+		liEv.add(event);
+		susp.setEvenements(liEv);
+		suspectRepository.save(susp);
 	return suspectRepository.findByIdSuspect(idSuspect); 
 	}
+
+	@Override
+	public byte[] photoFace(Long id) {
+		Suspect sus=suspectRepository.findById(id).get();
+		String photoName=sus.getPhotoFace();
+		File file=new File(System.getProperty("user.home")+"/MCIPPhotos/photoSuspects/"+photoName);
+		Path path=Paths.get(file.toURI());
+		try {
+			return Files.readAllBytes(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public byte[] photoEntiere(Long id) {
+		Suspect sus=suspectRepository.findById(id).get();
+		String photoName=sus.getPhotoEntiere();
+		File file=new File(System.getProperty("user.home")+"/MCIPPhotos/photoSuspects/"+photoName);
+		Path path=Paths.get(file.toURI());
+		try {
+			return Files.readAllBytes(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public byte[] photoProfil(Long id) {
+		Suspect sus=suspectRepository.findById(id).get();
+		String photoName=sus.getPhotoProfil();
+		File file=new File(System.getProperty("user.home")+"/MCIPPhotos/photoSuspects/"+photoName);
+		Path path=Paths.get(file.toURI());
+		try {
+			return Files.readAllBytes(path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
 
 }

@@ -22,6 +22,12 @@ public interface SuspectRepository extends JpaRepository<Suspect, Long>{
 	public List<Suspect> suspectRechercher();  
 	
 	@Query("select s from Suspect s where s.position='DEFERER'")
-	public List<Suspect> suspectDeferer();  
+	public List<Suspect> suspectDeferer(); 
+	
+	@Query("select s from Suspect s where s.position='LIBRE'")
+	public List<Suspect> suspectLibre();
+	
+	Boolean existsByNumeroCni(String numeroCni);
 	
 }
+

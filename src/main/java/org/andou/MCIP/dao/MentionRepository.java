@@ -14,5 +14,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public interface MentionRepository extends JpaRepository<Mention, Long>{
 	public List<Mention> findByDateMention(Date dateMention);
 	public Mention findByNumeroMention(Long numeroMention);
-    
+	
+	Boolean existsByNumeroMention(Long numeroMention);  
 }

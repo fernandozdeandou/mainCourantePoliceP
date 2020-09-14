@@ -36,5 +36,7 @@ public interface PersonnelRepository extends JpaRepository<Personnel, String>{
 	 
 	@Query("select p from Personnel p where p.statut='AFFECTE'")
 	public Page<Personnel> personnelAffecte(PageRequest pageable);	
+	
+	Boolean existsByMatricule(String matricule);
 	 
 }

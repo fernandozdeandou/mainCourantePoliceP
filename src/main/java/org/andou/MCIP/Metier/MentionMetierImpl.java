@@ -7,12 +7,16 @@ import org.andou.MCIP.dao.MentionRepository;
 import org.andou.MCIP.dao.ObservationRepository;
 import org.andou.MCIP.entities.Mention;
 import org.andou.MCIP.entities.Observation;
+import org.andou.MCIP.sec.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import net.bytebuddy.implementation.bytecode.Throw;
 
 @Service
 public class MentionMetierImpl implements MentionMetier{
@@ -44,7 +48,16 @@ public class MentionMetierImpl implements MentionMetier{
 
 	@Override
 	public Mention infosMention(Long numeroMention) {
-		// TODO Auto-generated method stub
+		if (numeroMention<0){
+			throw  new RuntimeException("Le numéro de la mention doit être positif ! Veillez vérifier le numéro de la mention recherchée je vous en prie!");
+		    }
+		
+		
+		  if (!mentionRepository.existsById(numeroMention)){ throw new
+		  RuntimeException("La mention numéro "+numeroMention+" n'existe pas ");
+		  }
+		 
+		
 		return mentionRepository.findByNumeroMention(numeroMention);
 	}
 

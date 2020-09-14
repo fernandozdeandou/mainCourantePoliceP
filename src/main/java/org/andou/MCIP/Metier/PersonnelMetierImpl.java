@@ -17,6 +17,10 @@ public class PersonnelMetierImpl implements PersonnelMetier {
 
 	@Override
 	public Personnel savePersonnel(Personnel per) {
+		if (personnelRepository.existsByMatricule(per.getMatricule()))
+		{ throw new
+			  RuntimeException("Le personnel ayant le matricule N°"+per.getMatricule()+" est déjà enrégistré s'il vous plait!");
+		 }
 		per.setDatePriseService(new Date());
 		per.setStatut("EN SERVICE");
 		per.setPhotoProfil("unknown.jpg");

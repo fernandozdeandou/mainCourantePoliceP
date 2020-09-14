@@ -1,15 +1,21 @@
 package org.andou.MCIP.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,11 +51,6 @@ public class Personnel implements Serializable{
     @Temporal(TemporalType.DATE)
     private Date dateAffectation;
     private String statut;
-    @Column(unique = true)
-    private String email;
-    @OneToMany 
-    private Collection<Role> roles;
-	
-   
-
+    @Column(name = "email", unique = true)
+	private String email;
 }
